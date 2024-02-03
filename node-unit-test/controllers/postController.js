@@ -1,10 +1,10 @@
 const postModel = require('../models/post');
-// const { validationResult } = require('express-validator');
+const { validationResult } = require('express-validator');
 
 exports.addPost = (req, res) => {
-  // const errors = validationResult(req);
+  const errors = validationResult(req);
 
-  // if (errors.isEmpty()) {
+  if (errors.isEmpty()) {
     const {
       title,
       content
