@@ -30,12 +30,8 @@ describe('Post controller', () => {
     });
 
     // Add tests for other functions like 'Get User Post' and 'Get Post' here
-    
-
-
-
     describe('Get User Post', () => {
-
+        
     });
 
     describe('Get Post', () => {
