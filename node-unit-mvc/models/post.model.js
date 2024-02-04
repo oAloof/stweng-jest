@@ -27,3 +27,7 @@ exports.updatePost = (postId, obj, next) => {
         next(null, updatedPost);
     })
 }
+
+exports.findPost = (postId, next) => {
+    // Find post
+}
