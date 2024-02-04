@@ -19,11 +19,10 @@ describe('Post controller', () => {
 
     let expectedResult;
 
-     // This hook runs after all tests in this block
+     // This runs after all tests in this block
      afterAll(() => {
-        // Close the database connection, for example
+        // Close the database connection
         mongoose.connection.close();
-        // If there are other application-wide resources or stubs to restore, do it here
     });
 
     
