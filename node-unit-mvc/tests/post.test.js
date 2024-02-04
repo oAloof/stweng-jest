@@ -9,10 +9,10 @@ describe('Post controller', () => {
         body: {
             author: 'stswenguser',
             title: 'My first test post',
-            content: 'Random content'
+            content: 'Random content',
         },
         params: {
-            id: "5aa06bb80738152cfd536fdc"
+            id: '5aa06bb80738152cfd536fdc',
         }
     };
 
@@ -143,8 +143,8 @@ describe('Post controller', () => {
 
             PostController.findPost(req, res);
 
-            sinon.assert.calledWith(PostModel.findPost, req.params);
-            sinon.assert.calledWith(res.json, sinon.match({_id : req.body._id}))
+            sinon.assert.calledWith(PostModel.findPost, req.params.id);
+            sinon.assert.calledWith(res.json, sinon.match({_id : req.params.id}))
             sinon.assert.calledWith(res.json, sinon.match({ title: req.body.title }));
             sinon.assert.calledWith(res.json, sinon.match({ content: req.body.content }));
             sinon.assert.calledWith(res.json, sinon.match({ author: req.body.author }));
@@ -155,7 +155,7 @@ describe('Post controller', () => {
 
             PostController.findPost(req, res);
 
-            sinon.assert.calledWith(PostModel.createPost, req.body);
+            sinon.assert.calledWith(PostModel.findPost, req.params.id);
             sinon.assert.calledWith(res.status, 500);
             sinon.assert.calledOnce(res.status(500).end);
         })

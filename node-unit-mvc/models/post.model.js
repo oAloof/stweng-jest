@@ -29,5 +29,11 @@ exports.updatePost = (postId, obj, next) => {
 }
 
 exports.findPost = (postId, next) => {
-    // Find post
+    Post.find({_id: postId}, (err, fondPost) => {
+        if (err) {
+            return next(err);
+        }
+        next(null, fondPost);
+    })
+    
 }
