@@ -1,32 +1,35 @@
-import { addPost } from "./postController";
-import { jest } from "@jest/globals";
+import postController from "./postController";
+const postModel = require('../models/post');
+
+jest.mock('../models/post', () => ({
+    create: jest.fn(),
+}));
 
 describe('Post controller', () => {
+    let req = {
+        body: {},
+        flash: jest.fn(),
+        session: { user: 'Test Author' },
+    };
+
+    let res = {redirect: jest.fn()}
+
+
     describe('Add Post', () => {
-        it('should add a new post', () => {
-            const req = {
-                body: {
-                    title: 'Test Post',
-                    content: 'Test Content',
-                    author: 'Test Author'
-                }
-            };
+        it('redirects to "/posts" on successful post creation', async () => {
+            // Arrange
+            const postDetails = { title: 'Test Title', content: 'Test Content', author: 'Test Author' };
 
-            const res = {
-                json: jest.fn(),
-                status: jest.fn().mockReturnThis(),
-                end: jest.fn()
-            };
-
-            addPost(req, res);
-
-            // Assuming your implementation saves the post and returns some result
-            expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
-                title: 'Test Post',
-                content: 'Test Content',
-                author: 'Test Author'
-            }));
-        });
+            req.body = postDetails;
+            postModel.create.mockImplementation((data, callback) => callback(null, data)); // Simulate success
+            
+            // Act
+            await postController.addPost(req, res);
+          
+            // Assert
+            expect(postModel.create).toHaveBeenCalledWith(postDetails, expect.any(Function));
+            expect(res.redirect).toHaveBeenCalledWith('/posts');
+          });
     });
 
     // Add tests for other functions like 'Get User Post' and 'Get Post' here
