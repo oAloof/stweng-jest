@@ -37,3 +37,8 @@ exports.findPost = (postId, next) => {
     })
     
 }
+
+
+exports.getAllPost = (obj, next) => {
+    
+}

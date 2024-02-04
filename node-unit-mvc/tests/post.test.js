@@ -114,6 +114,16 @@ describe('Post controller', () => {
             sinon.assert.calledWith(res.json, sinon.match({author: req.body.author}));
             sinon.assert.calledWith(res.json, sinon.match({date: req.body.date}));
         })
+
+        it('should return status 500 on server error', () => {
+            createUpdateStub = sinon.stub(PostModel, 'updatePost').yields(error) 
+
+            PostController.update(req, res);
+
+            sinon.assert.calledWith(PostModel.updatePost, req.params.id, req.body, {new: true});
+            sinon.assert.calledWith(res.status, 500);
+            sinon.assert.calledOnce(res.status(500).end);
+        })
     });
 
     describe('findPost', () => {
@@ -156,6 +166,41 @@ describe('Post controller', () => {
             PostController.findPost(req, res);
 
             sinon.assert.calledWith(PostModel.findPost, req.params.id);
+            sinon.assert.calledWith(res.status, 500);
+            sinon.assert.calledOnce(res.status(500).end);
+        })
+    })
+
+    describe('getAll', () => {
+        let findAllStub;
+
+        beforeEach(() => {
+            res = {
+                json: sinon.spy(),
+                status: sinon.stub().returns({ end: sinon.spy() })
+            };
+            expectedResult = [{}, {}, {}]
+        });
+
+        afterEach(() => {
+            findAllStub.restore();
+        });
+
+        it('should return array of post objects or empty array', () => {
+            findAllStub = sinon.stub(PostModel, 'getAllPost').yields(null, expectedResult);
+
+            PostController.getAllPosts(req, res);
+
+            sinon.assert.calledWith(PostModel.getAllPost, {});
+            sinon.assert.calledWith(res.json, sinon.match.array);
+        })
+
+        it('should return status 500 on server error', () => {
+            findAllStub = sinon.stub(PostModel, 'getAllPost').yields(error) 
+
+            PostController.getAllPosts(req, res);
+
+            sinon.assert.calledWith(PostModel.getAllPost, {});
             sinon.assert.calledWith(res.status, 500);
             sinon.assert.calledOnce(res.status(500).end);
         })
