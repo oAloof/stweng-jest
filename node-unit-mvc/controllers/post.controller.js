@@ -40,7 +40,17 @@ PostController.findPost = (req, res) => {
 };
 
 PostController.getAllPosts = (req, res) => {
-    //Get all posts
+    return PostModel.getAllPosts({}, (err, post) => {
+        if (err) {
+            return res.status(500).end();
+        }
+        else if (!post) {
+            return res.status(404).end();
+        }
+        else {
+            return res.json(post);
+        }
+    })
 };
 
 module.exports = PostController;

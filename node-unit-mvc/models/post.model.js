@@ -29,16 +29,20 @@ exports.updatePost = (postId, obj, next) => {
 }
 
 exports.findPost = (postId, next) => {
-    Post.find({_id: postId}, (err, fondPost) => {
+    Post.find({_id: postId}, (err, foundPost) => {
         if (err) {
             return next(err);
         }
-        next(null, fondPost);
+        next(null, foundPost);
     })
     
 }
 
-
-exports.getAllPost = (obj, next) => {
-    
+exports.getAllPosts = (obj, next) => {
+    Post.find({}, (err, posts) => {
+        if (err) {
+            return next(err);
+        }
+        next(null, posts);
+    })
 }

@@ -187,20 +187,20 @@ describe('Post controller', () => {
         });
 
         it('should return array of post objects or empty array', () => {
-            findAllStub = sinon.stub(PostModel, 'getAllPost').yields(null, expectedResult);
+            findAllStub = sinon.stub(PostModel, 'getAllPosts').yields(null, expectedResult);
 
             PostController.getAllPosts(req, res);
 
-            sinon.assert.calledWith(PostModel.getAllPost, {});
+            sinon.assert.calledWith(PostModel.getAllPosts, {});
             sinon.assert.calledWith(res.json, sinon.match.array);
         })
 
         it('should return status 500 on server error', () => {
-            findAllStub = sinon.stub(PostModel, 'getAllPost').yields(error) 
+            findAllStub = sinon.stub(PostModel, 'getAllPosts').yields(error) 
 
             PostController.getAllPosts(req, res);
 
-            sinon.assert.calledWith(PostModel.getAllPost, {});
+            sinon.assert.calledWith(PostModel.getAllPosts, {});
             sinon.assert.calledWith(res.status, 500);
             sinon.assert.calledOnce(res.status(500).end);
         })
