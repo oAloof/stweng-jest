@@ -117,7 +117,7 @@ describe('Post controller', () => {
     });
 
     describe('findPost', () => {
-        var findPostStub;
+        let findPostStub;
 
         beforeEach(() => {
             res = {
@@ -149,5 +149,15 @@ describe('Post controller', () => {
             sinon.assert.calledWith(res.json, sinon.match({ content: req.body.content }));
             sinon.assert.calledWith(res.json, sinon.match({ author: req.body.author }));
         });
+
+        it('should return status 500 on server error', () => {
+            findPostStub = sinon.stub(PostModel, 'findPost').yields(error) 
+
+            PostController.findPost(req, res);
+
+            sinon.assert.calledWith(PostModel.createPost, req.body);
+            sinon.assert.calledWith(res.status, 500);
+            sinon.assert.calledOnce(res.status(500).end);
+        })
     })
 });
