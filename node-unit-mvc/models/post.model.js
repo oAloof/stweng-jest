@@ -17,3 +17,13 @@ exports.createPost = (obj, next) => {
         next(err, post)
     }) 
 }
+
+exports.updatePost = (postId, obj, next) => {
+    
+    Post.findOneAndUpdate({ _id: postId }, obj, { new: true }, (err, updatedPost) =>{
+        if (err) {
+            return next(err);
+        }
+        next(null, updatedPost);
+    })
+}

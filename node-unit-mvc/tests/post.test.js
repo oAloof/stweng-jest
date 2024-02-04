@@ -10,6 +10,9 @@ describe('Post controller', () => {
             author: 'stswenguser',
             title: 'My first test post',
             content: 'Random content'
+        },
+        params: {
+            id: "5aa06bb80738152cfd536fdc"
         }
     };
 
@@ -84,6 +87,33 @@ describe('Post controller', () => {
 
     describe('update', () => {
 
+        var createUpdateStub;
+        beforeEach(() => {
+            res = {
+                json: sinon.spy(),
+                status: sinon.stub().returns({ end: sinon.spy() })
+            };
+            expectedResult = req.body
+        })
+
+        afterEach(() => {
+            createUpdateStub.restore();
+        })
+        
+
+        it('should return updated post object', () => {
+            createUpdateStub = sinon.stub(PostModel, 'updatePost').yields(null, expectedResult);
+            
+
+            PostController.update(req, res);
+            
+            
+            sinon.assert.calledWith(PostModel.updatePost, req.params.id, req.body, {new: true});
+            sinon.assert.calledWith(res.json, sinon.match({title: req.body.title}));
+            sinon.assert.calledWith(res.json, sinon.match({content: req.body.content}));
+            sinon.assert.calledWith(res.json, sinon.match({author: req.body.author}));
+            sinon.assert.calledWith(res.json, sinon.match({date: req.body.date}));
+        })
     });
 
     describe('findPost', () => {
