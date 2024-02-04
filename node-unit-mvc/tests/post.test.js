@@ -1,6 +1,7 @@
 const sinon = require('sinon');
 const PostModel = require('../models/post.model');
 const PostController = require('../controllers/post.controller');
+const mongoose = require('../models/connection');
 
 describe('Post controller', () => {
     // Setup the responses
@@ -17,6 +18,13 @@ describe('Post controller', () => {
     let res = {};
 
     let expectedResult;
+
+     // This hook runs after all tests in this block
+     afterAll(() => {
+        // Close the database connection, for example
+        mongoose.connection.close();
+        // If there are other application-wide resources or stubs to restore, do it here
+    });
 
     
     describe('create', () => {

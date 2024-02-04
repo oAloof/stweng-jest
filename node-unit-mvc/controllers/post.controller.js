@@ -9,7 +9,6 @@ PostController.create = (req, res) => {
             return res.json(post);
         }
     })
-
 };
 
 PostController.update = (req, res) => {
