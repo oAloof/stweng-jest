@@ -14,7 +14,7 @@ describe('Post controller', () => {
         session: { user: 'Test Author' },
     };
 
-    let res = {redirect: jest.fn(), render: jest.fn()}
+    let res = {redirect: jest.fn(), render: jest.fn(), send: jest.fn()}
 
 
     describe('Add Post', () => {
@@ -43,12 +43,12 @@ describe('Post controller', () => {
                 { _id: 2, title: "title 2", content: "content 2", author: "author 1"}
             ]
             
-            postController.getByUser.mockImplementation((user, callback) => callback(null, user));
-            // postController.getUserPosts(req, res);
-            postController.getByUser(req, res);
+            postModel.getByUser.mockImplementation((user, callback) => callback(null, userPosts));
 
-            expect(postModel.getByUser).toHaveBeenCalledWith(req, expect.any(Function));
-            expect(res.render).toHaveBeenCalledWith('userPosts', { posts: userPosts, user: 'Test Author' });
+            postController.getUserPosts(req.session.user, res);
+
+            expect(postModel.getByUser).toHaveBeenCalledWith(req.session.user, expect.any(Function));
+            expect(res.send).toHaveBeenCalledWith(userPosts);
 
         });
     })

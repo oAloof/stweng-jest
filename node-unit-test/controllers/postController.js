@@ -29,17 +29,11 @@ exports.addPost = (req, res) => {
 
 };
 
-exports.getUserPosts = (user, callback) => {
+exports.getUserPosts = (user, res) => {
   postModel.getByUser(user, (err, posts) => {
     if (err) throw err;
 
-    const postObjects = [];
-
-    posts.forEach(function(doc) {
-      postObjects.push(doc.toObject());
-    });
-
-    callback(postObjects);
+    res.send(posts);
   });
 };
 
