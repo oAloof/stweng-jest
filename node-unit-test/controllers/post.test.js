@@ -1,8 +1,10 @@
 import postController from "./postController";
-const postModel = require('../models/post');
+// const postModel = require('../models/post');
+import postModel from "../models/post";
 
 jest.mock('../models/post', () => ({
     create: jest.fn(),
+    getByUser: jest.fn()
 }));
 
 describe('Post controller', () => {
@@ -12,7 +14,7 @@ describe('Post controller', () => {
         session: { user: 'Test Author' },
     };
 
-    let res = {redirect: jest.fn()}
+    let res = {redirect: jest.fn(), render: jest.fn()}
 
 
     describe('Add Post', () => {
@@ -33,4 +35,30 @@ describe('Post controller', () => {
     });
 
     // Add tests for other functions like 'Get User Post' and 'Get Post' here   
+    describe('Get By User', () => {
+        it('should return all user posts made by user', () =>  {
+            //Arrange 
+            const userPosts = [
+                { _id: 1, title: "title 1", content: "content 1", author: "author 1"},
+                { _id: 2, title: "title 2", content: "content 2", author: "author 1"}
+            ]
+            
+            postController.getByUser.mockImplementation((user, callback) => callback(null, user));
+            // postController.getUserPosts(req, res);
+            postController.getByUser(req, res);
+
+            expect(postModel.getByUser).toHaveBeenCalledWith(req, expect.any(Function));
+            expect(res.render).toHaveBeenCalledWith('userPosts', { posts: userPosts, user: 'Test Author' });
+
+        });
+    })
+
+
+    describe('Get Post', () => { 
+        it("should return a single post", () => {
+            //Arrange
+          
+        })
+    })
+
 });
