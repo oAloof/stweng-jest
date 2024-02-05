@@ -1,10 +1,10 @@
 import postController from "./postController";
-// const postModel = require('../models/post');
 import postModel from "../models/post";
 
 jest.mock('../models/post', () => ({
     create: jest.fn(),
-    getByUser: jest.fn()
+    getByUser: jest.fn(),
+    getById: jest.fn()
 }));
 
 describe('Post controller', () => {
@@ -49,7 +49,6 @@ describe('Post controller', () => {
 
             expect(postModel.getByUser).toHaveBeenCalledWith(req.session.user, expect.any(Function));
             expect(res.send).toHaveBeenCalledWith(userPosts);
-
         });
     })
 
@@ -57,8 +56,23 @@ describe('Post controller', () => {
     describe('Get Post', () => { 
         it("should return a single post", () => {
             //Arrange
-          
+            req.params = { id: 1 };
+            const post = { title: "title 1", content: "content 1", date: Date.now(), author: "author 1" };
+            const mongoosePostMock = {
+                ...post,
+                toObject: function() {
+                    return JSON.parse(JSON.stringify(this));
+                }
+            };
+
+            postModel.getById.mockImplementation((req, callback) => callback(null, mongoosePostMock));
+
+            //Act
+            postController.getPost(req, res);
+
+            //Assert
+            expect(postModel.getById).toHaveBeenCalledWith(req.params.id, expect.any(Function));
+            expect(res.render).toHaveBeenCalledWith('singlepost', { pageTitle: post.title, post: post});
         })
     })
-
 });

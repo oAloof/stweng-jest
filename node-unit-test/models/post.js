@@ -8,7 +8,7 @@ const postSchema = new mongoose.Schema({
   }
 );
 
-const Post = mongoose.model('posts', postSchema);
+Post = mongoose.model('posts', postSchema);
 
 // Saving a post given the validated object
 exports.create = (obj, next) => {
