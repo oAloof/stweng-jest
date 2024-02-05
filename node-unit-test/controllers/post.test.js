@@ -16,7 +16,7 @@ describe('Post controller', () => {
 
     let res = {redirect: jest.fn(), render: jest.fn()}
 
-
+    let error = new Error({ error: 'Error message'});
     describe('Add Post', () => {
         it('redirects to "/posts" on successful post creation', () => {
             // Arrange
@@ -31,7 +31,22 @@ describe('Post controller', () => {
             // Assert
             expect(postModel.create).toHaveBeenCalledWith(postDetails, expect.any(Function));
             expect(res.redirect).toHaveBeenCalledWith('/posts');
-          });
+        });
+
+
+        it('redirect to "/posts/add" on error post creation', () => {
+            const postDetails = { title: 'Test Title', content: 'Test Content', author: 'Test Author' };
+
+            req.body = postDetails;
+
+            postModel.create.mockImplementation((data, callback) => callback(error, null));
+
+            postController.addPost(req, res);
+
+            expect(postModel.create).toHaveBeenCalledWith(postDetails, expect.any(Function));
+            expect(res.redirect).toHaveBeenCalledWith('/posts/add');
+            
+        });
     });
 
     // Add tests for other functions like 'Get User Post' and 'Get Post' here   
