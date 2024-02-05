@@ -16,7 +16,7 @@ describe('Post controller', () => {
 
 
     describe('Add Post', () => {
-        it('redirects to "/posts" on successful post creation', async () => {
+        it('redirects to "/posts" on successful post creation', () => {
             // Arrange
             const postDetails = { title: 'Test Title', content: 'Test Content', author: 'Test Author' };
 
@@ -24,7 +24,7 @@ describe('Post controller', () => {
             postModel.create.mockImplementation((data, callback) => callback(null, data)); // Simulate success
             
             // Act
-            await postController.addPost(req, res);
+            postController.addPost(req, res);
           
             // Assert
             expect(postModel.create).toHaveBeenCalledWith(postDetails, expect.any(Function));
