@@ -17,6 +17,7 @@ describe('Post controller', () => {
     let res = {redirect: jest.fn(), render: jest.fn(), send: jest.fn()}
 
     let error = new Error({ error: 'Error message'});
+
     describe('Add Post', () => {
         it('redirects to "/posts" on successful post creation', () => {
             // Arrange
@@ -65,6 +66,16 @@ describe('Post controller', () => {
             expect(postModel.getByUser).toHaveBeenCalledWith(req.session.user, expect.any(Function));
             expect(res.send).toHaveBeenCalledWith(userPosts);
         });
+
+        it('should return an error if there is an error', () => {
+            //Arrange
+            postModel.getByUser.mockImplementation((user, callback) => callback(error, null));
+
+            postController.getUserPosts(req.session.user, res);
+
+            expect(postModel.getByUser).toHaveBeenCalledWith(req.session.user, expect.any(Function));
+            expect(res.send).toHaveBeenCalledWith(error);
+        });
     })
 
 
@@ -88,6 +99,19 @@ describe('Post controller', () => {
             //Assert
             expect(postModel.getById).toHaveBeenCalledWith(req.params.id, expect.any(Function));
             expect(res.render).toHaveBeenCalledWith('singlepost', { pageTitle: post.title, post: post});
+        })
+
+        it("should return an error if there is an error", () => {
+            //Arrange
+            req.params = { id: 1 };
+            postModel.getById.mockImplementation((postId, callback) => callback(error));
+
+            //Act
+            postController.getPost(req, res);
+
+            //Assert
+            expect(postModel.getById).toHaveBeenCalledWith(req.params.id, expect.any(Function));
+            expect(res.send).toHaveBeenCalledWith(error);
         })
     })
 });

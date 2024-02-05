@@ -31,7 +31,7 @@ exports.addPost = (req, res) => {
 
 exports.getUserPosts = (user, res) => {
   postModel.getByUser(user, (err, posts) => {
-    if (err) throw err;
+    if (err) res.send(err);
 
     res.send(posts);
   });
@@ -41,6 +41,10 @@ exports.getPost = (req, res) => {
   const postId = req.params.id;
 
   postModel.getById(postId, (err, post) => {
+    if (err) {
+      res.send(err)
+      return
+    };
 
     res.render('singlepost', { pageTitle: post.title, post: post.toObject()});
   });
